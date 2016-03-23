@@ -20,6 +20,6 @@
 
     <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:textColorPrimary">@color/grey_0</item>
-        <item name="android:textColorSecondary">@color/grey_500</item>
+        <item name="android:textColorSecondary">#ffffff</item>
     </style>
 </resources>
