@@ -12,6 +12,10 @@ import com.corebaseit.bevia.marvelcomicsreleaseapp.R;
 
 
 /**
+ * Created by vbevia on 23/03/16.
+ */
+
+/**
  * A simple {@link Fragment} subclass.
  */
 public class ComicsGridViewFragment extends Fragment {

@@ -9,6 +9,11 @@ import com.corebaseit.bevia.marvelcomicsreleaseapp.fragments.ComicsGridViewFragm
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+
+/**
+ * Created by vbevia on 23/03/16.
+ */
+
 public class MainActivity extends AppCompatActivity {
 
 
