@@ -2,7 +2,6 @@ package com.corebaseit.bevia.marvelcomicsreleaseapp.network;
 
 import com.corebaseit.bevia.marvelcomicsreleaseapp.constants.Constants;
 import com.corebaseit.bevia.marvelcomicsreleaseapp.models.Comic;
-import com.corebaseit.bevia.marvelcomicsreleaseapp.models.ComicsDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -15,10 +14,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by vbevia on 23/03/16.
- */
-public class ComicsGridResponseDeserializer implements JsonDeserializer<ComicsDeserializer> {
+
+public class ComicsGridDeserializer implements JsonDeserializer<ComicsDeserializer> {
 
 
     @Override
@@ -49,4 +46,3 @@ public class ComicsGridResponseDeserializer implements JsonDeserializer<ComicsDe
     }
 
 }
-

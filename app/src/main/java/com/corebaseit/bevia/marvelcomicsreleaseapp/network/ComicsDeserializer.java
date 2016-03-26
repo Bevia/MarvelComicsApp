@@ -1,15 +1,12 @@
-package com.corebaseit.bevia.marvelcomicsreleaseapp.models;
+package com.corebaseit.bevia.marvelcomicsreleaseapp.network;
 
 import com.corebaseit.bevia.marvelcomicsreleaseapp.constants.Constants;
+import com.corebaseit.bevia.marvelcomicsreleaseapp.models.Comic;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-
-/**
- * Created by vbevia on 24/03/16.
- */
 
 public class ComicsDeserializer {
     @SerializedName(Constants.CODE_KEY)
@@ -36,5 +33,4 @@ public class ComicsDeserializer {
         this.comics = comics;
     }
 }
-
 

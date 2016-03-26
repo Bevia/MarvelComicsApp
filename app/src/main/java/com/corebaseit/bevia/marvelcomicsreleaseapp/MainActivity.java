@@ -1,9 +1,11 @@
 package com.corebaseit.bevia.marvelcomicsreleaseapp;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.corebaseit.bevia.marvelcomicsreleaseapp.R;
 import com.corebaseit.bevia.marvelcomicsreleaseapp.fragments.ComicsGridViewFragment;
 
 import butterknife.Bind;
@@ -34,11 +36,11 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setSubtitle("   list of comics");
 
         toolbar.setLogo(R.mipmap.ic_launcher);
+        Fragment fragment = null;
+        fragment = new ComicsGridViewFragment();
 
-        if (null == savedInstanceState) {
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.container, ComicsGridViewFragment.newInstance())
-                    .commit();
-        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
     }
 }
