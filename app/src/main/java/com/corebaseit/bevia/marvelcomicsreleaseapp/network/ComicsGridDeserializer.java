@@ -19,7 +19,8 @@ public class ComicsGridDeserializer implements JsonDeserializer<ComicsDeserializ
 
 
     @Override
-    public ComicsDeserializer deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public ComicsDeserializer deserialize(JsonElement json, Type typeOfT,
+                                          JsonDeserializationContext context) throws JsonParseException {
         //First deserialize the attributes that are in the first level in the JsonObject.
         Gson gson = new Gson();
         ComicsDeserializer response = gson.fromJson(json, ComicsDeserializer.class);

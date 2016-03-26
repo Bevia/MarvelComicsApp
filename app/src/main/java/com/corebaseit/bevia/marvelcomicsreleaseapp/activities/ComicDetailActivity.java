@@ -2,22 +2,21 @@ package com.corebaseit.bevia.marvelcomicsreleaseapp.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
 
 import com.corebaseit.bevia.marvelcomicsreleaseapp.R;
 import com.corebaseit.bevia.marvelcomicsreleaseapp.fragments.ComicDetailFragment;
 
-public class ComicDetailActivity extends ActionBarActivity {
+public class ComicDetailActivity extends AppCompatActivity {
 
     public final static int COMIC_DETAIL_FRAGMENT = 0;
     public final static String COMIC_DETAIL_FRAGMENT_TAG = "detailFragment";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.comic_detail_activity);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         if (savedInstanceState == null) {
             savedInstanceState = getIntent().getExtras();
@@ -37,18 +36,5 @@ public class ComicDetailActivity extends ActionBarActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.detailContainer, which, tag)
                 .commit();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case android.R.id.home:
-                finish();
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

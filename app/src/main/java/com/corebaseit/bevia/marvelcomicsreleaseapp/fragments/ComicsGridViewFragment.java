@@ -27,20 +27,11 @@ public class ComicsGridViewFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         CONTEXT = context;
     }
-
-
-    public static ComicsGridViewFragment newInstance() {
-        ComicsGridViewFragment fragment = new ComicsGridViewFragment();
-        fragment.setRetainInstance(true);
-        return fragment;
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

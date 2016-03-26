@@ -8,8 +8,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.corebaseit.bevia.marvelcomicsreleaseapp.R;
 import com.corebaseit.bevia.marvelcomicsreleaseapp.constants.Constants;
@@ -29,6 +31,9 @@ public class ComicDetailFragment  extends Fragment {
     TextView heroName;
     @Bind(R.id.heroDesc)
     TextView heroDesc;
+    @Bind(R.id.butonimagen)
+    Button butonimagen;
+
     private Context context;
 
     public ComicDetailFragment() {
@@ -62,6 +67,18 @@ public class ComicDetailFragment  extends Fragment {
     }
 
     private void initView(){
+
+        butonimagen.setOnClickListener((View v) -> {
+
+            Context context = getActivity().getApplicationContext();
+            CharSequence text = "almost there...ready for picture?";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+
+        });
+
         Picasso.with(context)
                 .load(Uri.parse(getArguments().getString(Constants.THUMBNAIL_KEY)))
                         .into(heroImage, new com.squareup.picasso.Callback() {
