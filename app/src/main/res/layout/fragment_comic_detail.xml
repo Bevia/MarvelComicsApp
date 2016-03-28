@@ -1,86 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="20">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_top1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_weight="17"
+        card_view:cardCornerRadius="8dp"
+        card_view:cardElevation="6dp"
+        card_view:cardPreventCornerOverlap="false"
+        card_view:cardUseCompatPadding="true">
 
-        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/card_top"
+        <TextView
+            android:id="@+id/takePicture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="Take a picture and become a hero!"
+            android:textColor="@color/red_900"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/butonimagen"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_below="@+id/profile_picture_view"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/camara" />
+
+    </android.support.v7.widget.CardView>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
+        android:layout_weight="3">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="410dp"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            card_view:cardCornerRadius="8dp"
-            card_view:cardElevation="6dp"
-            card_view:cardPreventCornerOverlap="false"
-            card_view:cardUseCompatPadding="true">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/img_detail_character"
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_top2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="4dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginBottom="4dp"
-                android:scaleType="centerCrop" />
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                card_view:cardCornerRadius="8dp"
+                card_view:cardElevation="6dp"
+                card_view:cardPreventCornerOverlap="false"
+                card_view:cardUseCompatPadding="true">
 
-            <Button
-                android:id="@+id/butonimagen"
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:layout_below="@+id/profile_picture_view"
-                android:layout_gravity="bottom|right"
-                android:layout_marginBottom="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/camara" />
 
-        </android.support.v7.widget.CardView>
+                <ImageView
+                    android:id="@+id/img_detail_character"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginTop="4dp"
+                    android:scaleType="centerCrop" />
 
-        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/card_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:minHeight="120dp"
-            card_view:cardCornerRadius="8dp"
-            card_view:cardElevation="6dp"
-            card_view:cardPreventCornerOverlap="false"
-            card_view:cardUseCompatPadding="true"
-            card_view:contentPadding="8dp"
-            card_view:contentPaddingBottom="@dimen/activity_vertical_margin"
-            card_view:contentPaddingRight="@dimen/activity_horizontal_margin"
-            card_view:contentPaddingTop="8dp">
 
-            <TextView
-                android:id="@+id/descTitle"
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_desc"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Description:"
-                android:textSize="18sp" />
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="2"
+                android:minHeight="120dp"
+                card_view:cardCornerRadius="8dp"
+                card_view:cardElevation="6dp"
+                card_view:cardPreventCornerOverlap="false"
+                card_view:cardUseCompatPadding="true"
+                card_view:contentPadding="8dp"
+                card_view:contentPaddingBottom="@dimen/activity_vertical_margin"
+                card_view:contentPaddingRight="@dimen/activity_horizontal_margin"
+                card_view:contentPaddingTop="8dp">
 
-            <TextView
-                android:id="@+id/heroName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/descTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Description:"
+                    android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/heroDesc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="65dp"
-                android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/heroName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="35dp"
+                    android:ellipsize="end"
+                    android:maxLines="3"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-        </android.support.v7.widget.CardView>
+                <TextView
+                    android:id="@+id/heroDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="65dp"
+                    android:textSize="16sp" />
 
-    </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
 
-</ScrollView>
+</LinearLayout>

@@ -57,13 +57,8 @@ public class ComicsGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        if (viewType == VIEW_COMIC) {
-            View itemView = layoutInflater.inflate(R.layout.item_comic, parent, false);
-            return new ComicViewHolder(itemView, viewType);
-        } else {
-            View itemView = layoutInflater.inflate(R.layout.item_comic_progress, parent, false);
-            return new ComicViewHolder(itemView, viewType);
-        }
+        View itemView = layoutInflater.inflate(R.layout.item_comic, parent, false);
+        return new ComicViewHolder(itemView, viewType);
     }
 
     @Override
@@ -144,22 +139,23 @@ public class ComicsGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public void setImg(Uri urlImage) {
             if (!urlImage.equals(Uri.EMPTY))
 
-            Picasso.with(context)
-                    .load(urlImage)
-                    .into(imgComic, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            //progressView.setVisibility(View.GONE);
-                        }
+                Picasso.with(context)
+                        .load(urlImage)
+                        .into(imgComic, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                //progressView.setVisibility(View.GONE);
+                            }
 
-                        @Override
-                        public void onError() {
+                            @Override
+                            public void onError() {
 
-                        }
-                    });
+                            }
+                        });
         }
 
-        public void setComicData(Comic comic) {;
+        public void setComicData(Comic comic) {
+            ;
 
             txtTItle.setText(comic.getTitle());
 
