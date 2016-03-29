@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -28,8 +29,10 @@ import com.corebaseit.bevia.marvelcomicsreleaseapp.R;
 import com.corebaseit.bevia.marvelcomicsreleaseapp.constants.Constants;
 import com.corebaseit.bevia.marvelcomicsreleaseapp.network.UploadFileToDropbox;
 import com.corebaseit.bevia.marvelcomicsreleaseapp.utils.HeroUserPictureStorage;
+import com.corebaseit.bevia.marvelcomicsreleaseapp.utils.UtilPhoto;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
+import com.dropbox.client2.exception.DropboxException;
 import com.dropbox.client2.session.AccessTokenPair;
 import com.dropbox.client2.session.AppKeyPair;
 import com.dropbox.client2.session.TokenPair;
@@ -40,6 +43,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -66,12 +71,14 @@ public class ComicDetailFragment extends Fragment {
 
     private String heroID;
     private File newPhotofile;
-
+    private Bitmap bitmap;
     private SharedPreferences userInfoSettings;
     public static final String MY_PARAM_0 =
-            "com.corebaseit.bevia.marvelcomicsreleaseapp.fragments.PARAM_0";//path of picture
+            "com.corebaseit.bevia.marvelcomicsreleaseapp.fragments.PARAM_0";
     public static final String MY_PARAM_1 =
-            "com.corebaseit.bevia.marvelcomicsreleaseapp.fragments.PARAM_1";//path of picture
+            "com.corebaseit.bevia.marvelcomicsreleaseapp.fragments.PARAM_1";
+    public static final String MY_PARAM_2 =
+            "com.corebaseit.bevia.marvelcomicsreleaseapp.fragments.PARAM_2";
     private DropboxAPI<AndroidAuthSession> dropbox;
     private final static String FILE_DIR = "/MarvelComicsReleaseApp/";
     private final static String DROPBOX_NAME = "Corebaseit";
@@ -83,7 +90,6 @@ public class ComicDetailFragment extends Fragment {
     private String profilePicture = "profileUserPicture";
     private String selectedImagePath;
     private String newName;
-
     private Context context;
 
     public ComicDetailFragment() {
@@ -109,23 +115,23 @@ public class ComicDetailFragment extends Fragment {
         // Restore preferences
         userInfoSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        String nameOfPerfilPictureInPreference = userInfoSettings.getString(MY_PARAM_0, "missing");
+        String nameOfPerfilPictureInPreference = userInfoSettings.getString(MY_PARAM_0, "missing"); //name of picture
         String nameOfHeroIdInPreference = userInfoSettings.getString(MY_PARAM_1, "missing");
+        String nameOfPermanentHeroIdInPreference = userInfoSettings.getString(MY_PARAM_2, "missing");
 
         heroName.setText(getArguments().getString(Constants.HERO_NAME));
         heroDesc.setText(getArguments().getString(Constants.HERO_DESC));
         heroID = getArguments().getString(Constants.ID_KEY);
 
-        if (nameOfHeroIdInPreference.equals(heroID)) {
+        if (nameOfHeroIdInPreference.equals(heroID)&&nameOfPerfilPictureInPreference.equals("missing")) {
 
-            Context contexts = getActivity().getApplicationContext();
-            CharSequence texts = "ready to send image";
-            int durationz = Toast.LENGTH_SHORT;
-
-            Toast toasts = Toast.makeText(contexts, texts, durationz);
-            toasts.show();
+            login.setText("login..you already are a hero");
+        }
+        if (nameOfHeroIdInPreference.equals(heroID)&&(!nameOfPerfilPictureInPreference.equals("missing"))) {
 
             getPicture(nameOfPerfilPictureInPreference, nameOfHeroIdInPreference);
+
+            login.setText("ready to send a picture");
 
         } else {
             Picasso.with(context)
@@ -171,29 +177,43 @@ public class ComicDetailFragment extends Fragment {
 
         uploadFile.setOnClickListener((View view) -> {
 
-            if (newPhotofile != null) {
+            if (nameOfHeroIdInPreference.equals(heroID)&&(nameOfPerfilPictureInPreference.equals("missing"))) {
 
-                UploadFileToDropbox upload = new UploadFileToDropbox(getActivity(), dropbox, FILE_DIR, newPhotofile);
-                upload.execute();
+                //getPicture(nameOfPerfilPictureInPreference, nameOfHeroIdInPreference);
 
-                Context context = getActivity().getApplicationContext();
-                CharSequence text = "Loading image...";
-                int duration = Toast.LENGTH_SHORT;
+                DownloadFileToDropBox download = new DownloadFileToDropBox(getActivity(), dropbox);
+                download.execute();
 
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
-            } else {
-                Context context = getActivity().getApplicationContext();
-                CharSequence text = "You must take a picture first...";
-                int duration = Toast.LENGTH_SHORT;
+            }else {
 
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
+                if (newPhotofile != null) {
 
+                    UploadFileToDropbox upload = new UploadFileToDropbox(getActivity(), dropbox, FILE_DIR, newPhotofile);
+                    upload.execute();
+
+                    Context context = getActivity().getApplicationContext();
+                    CharSequence text = "Loading image..." + newPhotofile.getName();
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+
+                    SharedPreferences.Editor userInfoEdit = userInfoSettings.edit();
+                    userInfoEdit.putString(MY_PARAM_2, newPhotofile.getName());
+                    userInfoEdit.commit();
+
+                } else {
+                    Context context = getActivity().getApplicationContext();
+                    CharSequence text = "You must take a picture first...";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+
+                }
             }
         });
         uploadFile.setVisibility(View.GONE);
-
 
         loggedIn(false);
 
@@ -212,22 +232,23 @@ public class ComicDetailFragment extends Fragment {
         }
 
         dropbox = new DropboxAPI<>(session);
+
+        if (nameOfHeroIdInPreference.equals(heroID)&&(nameOfPerfilPictureInPreference.equals("missing"))
+                &&(!nameOfPermanentHeroIdInPreference.equals("missing"))) {
+
+            DownloadFileToDropBox download = new DownloadFileToDropBox(getActivity(), dropbox);
+            download.execute();
+
+        }
         /**
          *                    Image setting:
          */
-
-        /*deleteImage = (Button) getActivity().findViewById(R.id.delete);
-        deleteImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                File dir = new File(Environment.getExternalStorageDirectory()+"/Bevia/");
-                deleteDirectory(dir);
-            }
-        });*/
     }
 
     private void getPicture(String nameOfPerfilPictureInPreference, String nameOfHeroIdInPreference) {
+
+        userInfoSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String profilePicture = userInfoSettings.getString(MY_PARAM_2, "missing");
 
         if (nameOfPerfilPictureInPreference.equals("missing")) {
 
@@ -239,7 +260,7 @@ public class ComicDetailFragment extends Fragment {
 
                 if (path != null) {
 
-                    Bitmap bitmapEnPreferenceias = decodeFile(photosEnPrederencia);
+                    bitmap = decodeFile(photosEnPrederencia);
 
                     try {
                         ExifInterface exif = new ExifInterface(path);
@@ -253,13 +274,13 @@ public class ComicDetailFragment extends Fragment {
                         } else if (orientation == 8) {
                             matrix.postRotate(270);
                         }
-                        bitmapEnPreferenceias = Bitmap.createBitmap(bitmapEnPreferenceias, 0, 0,
-                                bitmapEnPreferenceias.getWidth(), bitmapEnPreferenceias.getHeight(), matrix, true); // rotating bitmap
+                        bitmap = Bitmap.createBitmap(bitmap, 0, 0,
+                                bitmap.getWidth(), bitmap.getHeight(), matrix, true); // rotating bitmap
                     } catch (Exception e) {
 
                     }
 
-                    heroImage.setImageBitmap(bitmapEnPreferenceias);
+                    heroImage.setImageBitmap(bitmap);
                 }
             }
 
@@ -269,7 +290,7 @@ public class ComicDetailFragment extends Fragment {
 
             Log.d("PerfilPicture", "picture from preferencias!!!");
 
-            Bitmap bitmapEnPreferenceias = decodeFile(photosEnPrederencia);
+            bitmap = decodeFile(photosEnPrederencia);
 
             try {
                 ExifInterface exif = new ExifInterface(photosEnPrederencia.getAbsolutePath());
@@ -284,13 +305,13 @@ public class ComicDetailFragment extends Fragment {
                 } else if (orientation == 8) {
                     matrix.postRotate(270);
                 }
-                bitmapEnPreferenceias = Bitmap.createBitmap(bitmapEnPreferenceias, 0,
-                        0, bitmapEnPreferenceias.getWidth(), bitmapEnPreferenceias.getHeight(), matrix, true); // rotating bitmap
+                bitmap = Bitmap.createBitmap(bitmap, 0,
+                        0, bitmap.getWidth(), bitmap.getHeight(), matrix, true); // rotating bitmap
             } catch (Exception e) {
             }
 
             //image button:
-            heroImage.setImageBitmap(bitmapEnPreferenceias);
+            heroImage.setImageBitmap(bitmap);
         }
     }
 
@@ -306,7 +327,7 @@ public class ComicDetailFragment extends Fragment {
             File myDir = new File(root);
             if (!myDir.exists())
                 return null;
-            mediaImage = new File(myDir.getPath() + "/Bevia/" + profilePicture + ".jpg");
+            mediaImage = new File(myDir.getPath() + "/Bevia/" + (new Date().getTime() / 1000) + ".jpg");
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -321,20 +342,6 @@ public class ComicDetailFragment extends Fragment {
         return selectedImagePath;
     }
 
-    static public boolean deleteDirectory(File path) {
-        if (path.exists()) {
-            File[] files = path.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                if (files[i].isDirectory()) {
-                    deleteDirectory(files[i]);
-                } else {
-                    files[i].delete();
-                }
-            }
-        }
-        return (path.delete());
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -345,17 +352,16 @@ public class ComicDetailFragment extends Fragment {
                 selectedImagePath = getImagePath();
 
                 File photos = new File(selectedImagePath);
-                Bitmap bitmap = decodeFile(photos);
+                bitmap = decodeFile(photos);
 
                 //resave file with new name
                 newName = profilePicture;
                 File newFile = new File(newName);
                 photos.renameTo(newFile);
 
-                // save image internal path.....July 20th 2015
                 SharedPreferences.Editor userInfoEdit = userInfoSettings.edit();
-                userInfoEdit.putString(MY_PARAM_0, selectedImagePath);// password
-                userInfoEdit.putString(MY_PARAM_1, heroID);// password
+                userInfoEdit.putString(MY_PARAM_0, selectedImagePath);
+                userInfoEdit.putString(MY_PARAM_1, heroID);
 
                 // Commit the edits!
                 userInfoEdit.commit();
@@ -468,4 +474,105 @@ public class ComicDetailFragment extends Fragment {
             login.setVisibility(View.VISIBLE);
         }
     }
+
+    class DownloadFileToDropBox extends AsyncTask<Void, Void, Bitmap> {
+
+        private Context context;
+        private DropboxAPI<?> dropbox;
+        private String photoName;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            // Restore preferences
+            userInfoSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String nameOfPerfilPictureInPreference = userInfoSettings.getString(MY_PARAM_2, "missing");
+            photoName = "/MarvelComicsReleaseApp/" + nameOfPerfilPictureInPreference;
+
+            Context context = getActivity().getApplicationContext();
+            CharSequence text = photoName;
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, "You are a hero...downloading image", duration);
+            toast.show();
+        }
+
+        public DownloadFileToDropBox(Context context, DropboxAPI<?> dropbox) {
+            this.context = context.getApplicationContext();
+            this.dropbox = dropbox;
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            File tempFile;
+            Bitmap bp;
+            try {
+
+            /*  Downloading the just required image */
+                String path = UtilPhoto.getCacheFilename();
+                tempFile = new File(path);
+                FileOutputStream outputStream = new FileOutputStream(tempFile);
+                DropboxAPI.DropboxFileInfo info = dropbox.getFile(photoName, null, outputStream, null);
+                bp = UtilPhoto.loadFromCacheFile();
+                return bp;
+
+            } catch (IOException | DropboxException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap dbxBitMap) {
+            if (dbxBitMap != null) {
+
+                bitmap = dbxBitMap;
+
+                heroImage.setImageBitmap(dbxBitMap);
+
+                //userInfoSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                //String profilePicture = userInfoSettings.getString(MY_PARAM_2, "missing");
+
+                //storeImage(dbxBitMap, profilePicture);
+
+                //Toast.makeText(context, "photo OK" + dbxBitMap, Toast.LENGTH_LONG).show();
+
+            } else {
+                Toast.makeText(context, "Failed to download photo", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+   /* private boolean storeImage(Bitmap bitmap, String filename) {
+
+        String iconsStoragePath = Environment.getExternalStorageDirectory() + "/Bevia/ ";
+        File sdIconStorageDir = new File(iconsStoragePath);
+
+        //create storage directories, if they don't exist
+        sdIconStorageDir.mkdirs();
+
+        try {
+            String filePath = sdIconStorageDir.toString() + filename;
+            FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+
+            BufferedOutputStream bos = new BufferedOutputStream(fileOutputStream);
+
+            //choose another format if PNG doesn't suit you
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+
+            bos.flush();
+            bos.close();
+
+        } catch (FileNotFoundException e) {
+            Log.w("TAG", "Error saving image file: " + e.getMessage());
+            return false;
+        } catch (IOException e) {
+            Log.w("TAG", "Error saving image file: " + e.getMessage());
+            return false;
+        }
+
+        return true;
+    }*/
 }
