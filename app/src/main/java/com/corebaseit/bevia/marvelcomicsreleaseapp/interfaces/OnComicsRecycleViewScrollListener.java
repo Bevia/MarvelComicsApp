@@ -3,11 +3,16 @@ package com.corebaseit.bevia.marvelcomicsreleaseapp.interfaces;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+/**
+ * Created by vbevia on 28/03/16.
+ */
 public abstract class OnComicsRecycleViewScrollListener extends RecyclerView.OnScrollListener {
-
-    private int previousTotal = 8; // The total number of items in the dataset after the last load
-    private boolean loading = true; // True if we are still waiting for the last set of data to load.
-    private final static int VISIBLE_THRESHOLD = 12; // The minimum amount of items to have below your current scroll position before loading more.
+    // The total number of items in the dataset after the last load
+    private int previousTotal = 4;
+    // True if we are still waiting for the last set of data to load.
+    private boolean loading = true;
+    // The minimum amount of items to have below your current scroll position before loading more.
+    private final static int VISIBLE_THRESHOLD = 8;
     int lastVisibleItem, totalItemCount;
 
     private LinearLayoutManager mLinearLayoutManager;

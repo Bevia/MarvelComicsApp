@@ -4,7 +4,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_character_detail_actiity">CharacterDetailActivity</string>
-
+    <string name="login">Login</string>
+    <string name="upload">Upload</string>
+    <string name="download">Download</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

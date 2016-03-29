@@ -77,7 +77,7 @@ public class ComicsGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 bundle.putString(Constants.THUMBNAIL_KEY, String.valueOf(currentCumic.getUrlImage()));
                 bundle.putString(Constants.HERO_NAME, String.valueOf(currentCumic.getTitle()));
-                bundle.putString(Constants.ID_KEY, String.valueOf(1));
+                bundle.putString(Constants.ID_KEY, String.valueOf(currentCumic.getId()));
 
                 viewHolder.itemView.setOnClickListener((View v) -> {
                     Intent detailCharacter = new Intent(context, ComicDetailActivity.class);
@@ -144,9 +144,7 @@ public class ComicsGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         .into(imgComic, new Callback() {
                             @Override
                             public void onSuccess() {
-                                //progressView.setVisibility(View.GONE);
                             }
-
                             @Override
                             public void onError() {
 
@@ -155,10 +153,8 @@ public class ComicsGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         public void setComicData(Comic comic) {
-            ;
 
             txtTItle.setText(comic.getTitle());
-
             txtIssue.setText("Issue # " + comic.getIssues());
 
         }
