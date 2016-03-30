@@ -10,7 +10,7 @@ import retrofit.http.Query;
 public interface MarvelApiService {
 
     @GET(Constants.COMICS_URL)
-    public void requestComicsList(
+    void requestComicsList(
             @Query(Constants.LIMIT_PARAM) int limit,
             @Query(Constants.OFFSET_PARAM) int offset,
             @Query(Constants.API_KEY_PARAM) String apiKey,
