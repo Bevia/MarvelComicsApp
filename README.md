@@ -2,8 +2,11 @@
 Marvel Comics Android App  - DONE!
 
 1	Functional requirements (Using the Job to be Done framework)
+
 ◦	When i open the application I want to see a list of all Marvel’s released comic books covers ordered from most recent to the oldest so I can scroll through the the Marvel universe.
+
 ◦	When I select one of the comics I want to be able to change the cover picture with a photo taken from my camera so I can be a Marvel character!
+
 ◦	When I change a comic cover image I want to able to store it in my dropbox account so I won’t lose it when I reopen the application.
 
 Marvel account needed!
