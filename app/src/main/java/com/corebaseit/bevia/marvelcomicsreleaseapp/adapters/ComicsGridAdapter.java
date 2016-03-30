@@ -150,7 +150,6 @@ public class ComicsGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         public void setComicData(Comic comic) {
-
             txtTItle.setText(comic.getTitle());
             txtIssue.setText("Issue # " + comic.getIssues());
 
