@@ -13,9 +13,6 @@ import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 
-/**
- * Singleton for the API requests in retrofit
- */
 public class MarvelApiClient {
 
     private MarvelApiService apiService;

@@ -3,9 +3,6 @@ package com.corebaseit.bevia.marvelcomicsreleaseapp.interfaces;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-/**
- * Created by vbevia on 28/03/16.
- */
 public abstract class OnComicsRecycleViewScrollListener extends RecyclerView.OnScrollListener {
     // The total number of items in the dataset after the last load
     private int previousTotal = 4;

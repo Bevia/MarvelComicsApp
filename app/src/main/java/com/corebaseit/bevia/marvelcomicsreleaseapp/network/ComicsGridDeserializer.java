@@ -14,9 +14,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ComicsGridDeserializer implements JsonDeserializer<ComicsDeserializer> {
-
 
     @Override
     public ComicsDeserializer deserialize(JsonElement json, Type typeOfT,

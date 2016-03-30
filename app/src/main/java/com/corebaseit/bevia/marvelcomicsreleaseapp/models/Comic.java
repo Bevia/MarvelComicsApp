@@ -8,10 +8,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-
-/**
- * Created by hugo on 4/21/15.
- */
 public class Comic {
 
     @SerializedName(Constants.ID_KEY)

@@ -28,9 +28,6 @@ import butterknife.ButterKnife;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by sati on 29/04/2015.
- */
 public class ComicsGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int VIEW_PROGRESS = 0;

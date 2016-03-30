@@ -9,7 +9,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-
 public class UtilMethods {
 
     public static Long generateTimeStamp (){

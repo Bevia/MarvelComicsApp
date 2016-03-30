@@ -7,7 +7,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-
 public class ComicsDeserializer {
     @SerializedName(Constants.CODE_KEY)
     private int code;

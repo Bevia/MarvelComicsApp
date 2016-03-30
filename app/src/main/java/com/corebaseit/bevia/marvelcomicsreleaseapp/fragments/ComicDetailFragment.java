@@ -49,9 +49,6 @@ import java.util.Date;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ComicDetailFragment extends Fragment {
 
     @Bind(R.id.img_detail_character)
@@ -85,8 +82,8 @@ public class ComicDetailFragment extends Fragment {
     private final static String ACCESS_KEY = "0130l86m25ohiao";
     private final static String ACCESS_SECRET = "uffp4sjqfzfzgk2";
     private boolean isLoggedIn;
+    private boolean logINorLogOut;
     final private int CAPTURE_IMAGE = 2;
-    private boolean takenPicture = false;
     private String profilePicture = "profileUserPicture";
     private String selectedImagePath;
     private String newName;
@@ -115,24 +112,20 @@ public class ComicDetailFragment extends Fragment {
         // Restore preferences
         userInfoSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        String nameOfPerfilPictureInPreference = userInfoSettings.getString(MY_PARAM_0, "missing"); //name of picture
-        String nameOfHeroIdInPreference = userInfoSettings.getString(MY_PARAM_1, "missing");
-        String nameOfPermanentHeroIdInPreference = userInfoSettings.getString(MY_PARAM_2, "missing");
+        //If I've taken a picture  != missing...else == missing
+        String nameOfTakenPictureInPreference = userInfoSettings.getString(MY_PARAM_0, "missing"); //name of picture
+        String heroIdInPreference = userInfoSettings.getString(MY_PARAM_1, "missing");  //heroID
+        String heroPicture = userInfoSettings.getString(MY_PARAM_2, "missing"); //picture name in DropBox
 
         heroName.setText(getArguments().getString(Constants.HERO_NAME));
         heroDesc.setText(getArguments().getString(Constants.HERO_DESC));
         heroID = getArguments().getString(Constants.ID_KEY);
 
-        if (nameOfHeroIdInPreference.equals(heroID)&&nameOfPerfilPictureInPreference.equals("missing")) {
+        if (!nameOfTakenPictureInPreference.equals("missing") && (heroIdInPreference.equals(heroID))) {
 
-            login.setText("login..you already are a hero");
-        }
-        if (nameOfHeroIdInPreference.equals(heroID)&&(!nameOfPerfilPictureInPreference.equals("missing"))) {
+            getPicture(nameOfTakenPictureInPreference);
 
-            getPicture(nameOfPerfilPictureInPreference, nameOfHeroIdInPreference);
-
-            login.setText("ready to send a picture");
-
+            //else retrieve picture from Marvel...
         } else {
             Picasso.with(context)
                     .load(Uri.parse(getArguments().getString(Constants.THUMBNAIL_KEY)))
@@ -160,31 +153,22 @@ public class ComicDetailFragment extends Fragment {
             if (isLoggedIn) {
                 dropbox.getSession().unlink();
                 loggedIn(false);
+
             } else {
                 dropbox.getSession().startAuthentication(getActivity());
             }
-
-            Context context = getActivity().getApplicationContext();
-            CharSequence text = "Login in...";
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-
         });
         login.setVisibility(View.GONE);
 
-
         uploadFile.setOnClickListener((View view) -> {
 
-            if (nameOfHeroIdInPreference.equals(heroID)&&(nameOfPerfilPictureInPreference.equals("missing"))) {
-
-                //getPicture(nameOfPerfilPictureInPreference, nameOfHeroIdInPreference);
+            if (heroIdInPreference.equals(heroID) && (nameOfTakenPictureInPreference.equals("missing"))
+                    && (!heroPicture.equals("missing"))) {
 
                 DownloadFileToDropBox download = new DownloadFileToDropBox(getActivity(), dropbox);
                 download.execute();
 
-            }else {
+            } else {
 
                 if (newPhotofile != null) {
 
@@ -199,10 +183,11 @@ public class ComicDetailFragment extends Fragment {
                     toast.show();
 
                     SharedPreferences.Editor userInfoEdit = userInfoSettings.edit();
-                    userInfoEdit.putString(MY_PARAM_2, newPhotofile.getName());
+                    userInfoEdit.putString(MY_PARAM_2, newPhotofile.getName()); //save name of sent picture
                     userInfoEdit.commit();
 
                 } else {
+
                     Context context = getActivity().getApplicationContext();
                     CharSequence text = "You must take a picture first...";
                     int duration = Toast.LENGTH_SHORT;
@@ -216,7 +201,6 @@ public class ComicDetailFragment extends Fragment {
         uploadFile.setVisibility(View.GONE);
 
         loggedIn(false);
-
         AndroidAuthSession session;
         AppKeyPair pair = new AppKeyPair(ACCESS_KEY, ACCESS_SECRET);
 
@@ -233,8 +217,8 @@ public class ComicDetailFragment extends Fragment {
 
         dropbox = new DropboxAPI<>(session);
 
-        if (nameOfHeroIdInPreference.equals(heroID)&&(nameOfPerfilPictureInPreference.equals("missing"))
-                &&(!nameOfPermanentHeroIdInPreference.equals("missing"))) {
+        //if the received heroID is equal to stored heroID, and you
+        if (heroIdInPreference.equals(heroID)) {
 
             DownloadFileToDropBox download = new DownloadFileToDropBox(getActivity(), dropbox);
             download.execute();
@@ -245,7 +229,7 @@ public class ComicDetailFragment extends Fragment {
          */
     }
 
-    private void getPicture(String nameOfPerfilPictureInPreference, String nameOfHeroIdInPreference) {
+    private void getPicture(String nameOfPerfilPictureInPreference) {
 
         userInfoSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String profilePicture = userInfoSettings.getString(MY_PARAM_2, "missing");
@@ -255,8 +239,6 @@ public class ComicDetailFragment extends Fragment {
             if (HeroUserPictureStorage.checkifImageExists(profilePicture)) {
                 File photosEnPrederencia = HeroUserPictureStorage.getImage("/" + profilePicture + ".jpg");
                 String path = (photosEnPrederencia.getAbsolutePath());
-
-                Log.d("PerfilPicture", "picture from SD CARD!!!");
 
                 if (path != null) {
 
@@ -287,8 +269,6 @@ public class ComicDetailFragment extends Fragment {
         } else {
 
             File photosEnPrederencia = new File(nameOfPerfilPictureInPreference);
-
-            Log.d("PerfilPicture", "picture from preferencias!!!");
 
             bitmap = decodeFile(photosEnPrederencia);
 
@@ -361,7 +341,7 @@ public class ComicDetailFragment extends Fragment {
 
                 SharedPreferences.Editor userInfoEdit = userInfoSettings.edit();
                 userInfoEdit.putString(MY_PARAM_0, selectedImagePath);
-                userInfoEdit.putString(MY_PARAM_1, heroID);
+                userInfoEdit.putString(MY_PARAM_1, heroID); //save heroID
 
                 // Commit the edits!
                 userInfoEdit.commit();
@@ -370,7 +350,6 @@ public class ComicDetailFragment extends Fragment {
                 try {
                     ExifInterface exif = new ExifInterface(photos.getAbsolutePath());
                     int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-                    // Log.d("EXIF", "Exif: " + orientation);
                     Matrix matrix = new Matrix();
 
                     if (orientation == 6) {
@@ -414,7 +393,6 @@ public class ComicDetailFragment extends Fragment {
             //o.inSampleSize = 8;
             o.inJustDecodeBounds = true;
             BitmapFactory.decodeStream(new FileInputStream(f), null, o);
-
             final int REQUIRED_SIZE = 250; //it's safer for large images VB??
 
             //Find the correct scale value. It should be the power of 2, it's more efficient!
@@ -436,17 +414,19 @@ public class ComicDetailFragment extends Fragment {
     public void loggedIn(boolean isLogged) {
         isLoggedIn = isLogged;
         uploadFile.setEnabled(isLogged);
-        login.setText(isLogged ? "Logout" : "Login");
+        login.setText(isLogged ? "Logout" : "Login to Dropbox");
+        settingTexts(isLoggedIn);
+
+        if (isLogged == false) {
+            uploadFile.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        String nameOfHeroIdInPreference = userInfoSettings.getString(MY_PARAM_1, "missing");
-        if (nameOfHeroIdInPreference.equals(heroID)) {
-            takePicture.setText(" Login to upload image");
-        }
+        settingTexts(isLoggedIn);
 
         AndroidAuthSession session = dropbox.getSession();
         if (session.authenticationSuccessful()) {
@@ -470,8 +450,43 @@ public class ComicDetailFragment extends Fragment {
             }
         } else {
             uploadFile.setVisibility(View.GONE);
-            //download.setVisibility(View.GONE);
             login.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void settingTexts(boolean isLoggedIn) {
+
+        userInfoSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String nameOfTakenPictureInPreference = userInfoSettings.getString(MY_PARAM_0, "missing");
+        String heroIdInPreference = userInfoSettings.getString(MY_PARAM_1, "missing");  //heroID
+        String heroPicture = userInfoSettings.getString(MY_PARAM_2, "missing");
+
+        if (!heroPicture.equals("missing")
+                && (nameOfTakenPictureInPreference.equals("missing"))
+                && (heroIdInPreference.equals(heroID))) {
+            takePicture.setText(" You are a hero, your picture is in Dropbox!");
+        } else if (!nameOfTakenPictureInPreference.equals("missing")
+                && (heroPicture.equals("missing")
+                && (heroIdInPreference.equals(heroID))
+                && (isLoggedIn == false))) {
+            takePicture.setText(" Login to upload picture to Dropbox...");
+        } else if (!nameOfTakenPictureInPreference.equals("missing")
+                && (!heroPicture.equals("missing")
+                && (heroIdInPreference.equals(heroID))
+                && (isLoggedIn == false))) {
+            takePicture.setText(" Login to upload picture to Dropbox...");
+        }else if (!nameOfTakenPictureInPreference.equals("missing")
+                && (!heroPicture.equals("missing")
+                && (heroIdInPreference.equals(heroID))
+                && (isLoggedIn == true))) {
+            takePicture.setText(" Upload picture to Dropbox!");
+        }else if (!nameOfTakenPictureInPreference.equals("missing")
+                && (heroPicture.equals("missing")
+                && (heroIdInPreference.equals(heroID))
+                && (isLoggedIn == true))) {
+            takePicture.setText(" Upload picture to Dropbox!");
+        } else {
+            takePicture.setText(" Take a picture, become a hero...");
         }
     }
 
@@ -529,50 +544,12 @@ public class ComicDetailFragment extends Fragment {
             if (dbxBitMap != null) {
 
                 bitmap = dbxBitMap;
-
                 heroImage.setImageBitmap(dbxBitMap);
-
-                //userInfoSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                //String profilePicture = userInfoSettings.getString(MY_PARAM_2, "missing");
-
-                //storeImage(dbxBitMap, profilePicture);
-
-                //Toast.makeText(context, "photo OK" + dbxBitMap, Toast.LENGTH_LONG).show();
+                takePicture.setText(" You are a hero, your picture is in Dropbox!");
 
             } else {
                 Toast.makeText(context, "Failed to download photo", Toast.LENGTH_LONG).show();
             }
         }
     }
-
-   /* private boolean storeImage(Bitmap bitmap, String filename) {
-
-        String iconsStoragePath = Environment.getExternalStorageDirectory() + "/Bevia/ ";
-        File sdIconStorageDir = new File(iconsStoragePath);
-
-        //create storage directories, if they don't exist
-        sdIconStorageDir.mkdirs();
-
-        try {
-            String filePath = sdIconStorageDir.toString() + filename;
-            FileOutputStream fileOutputStream = new FileOutputStream(filePath);
-
-            BufferedOutputStream bos = new BufferedOutputStream(fileOutputStream);
-
-            //choose another format if PNG doesn't suit you
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
-
-            bos.flush();
-            bos.close();
-
-        } catch (FileNotFoundException e) {
-            Log.w("TAG", "Error saving image file: " + e.getMessage());
-            return false;
-        } catch (IOException e) {
-            Log.w("TAG", "Error saving image file: " + e.getMessage());
-            return false;
-        }
-
-        return true;
-    }*/
 }

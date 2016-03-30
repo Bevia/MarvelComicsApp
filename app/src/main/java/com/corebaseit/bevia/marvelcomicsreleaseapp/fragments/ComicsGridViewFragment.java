@@ -14,9 +14,6 @@ import com.corebaseit.bevia.marvelcomicsreleaseapp.R;
 import com.corebaseit.bevia.marvelcomicsreleaseapp.adapters.ComicsGridAdapter;
 import com.corebaseit.bevia.marvelcomicsreleaseapp.interfaces.OnComicsRecycleViewScrollListener;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ComicsGridViewFragment extends Fragment {
 
     private RecyclerView recyclerViewComics;
@@ -63,62 +60,6 @@ public class ComicsGridViewFragment extends Fragment {
             }
         });
     }
-
-  /* @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        // Checks the orientation of the screen
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-
-
-        }
-    }*/
-
-    /*public boolean isTablet(Context context) {
-        boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
-        boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
-        return (xlarge || large);
-    }*/
-
-   /* private static boolean isTabletDevice(Context activityContext) {
-
-        boolean device_large = ((activityContext.getResources().getConfiguration().screenLayout &
-                Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE);
-        DisplayMetrics metrics = new DisplayMetrics();
-        Activity activity = (Activity) activityContext;
-        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        if (device_large) {
-            //Tablet
-            if (metrics.densityDpi == DisplayMetrics.DENSITY_DEFAULT){
-                return true;
-            }else if(metrics.densityDpi == DisplayMetrics.DENSITY_MEDIUM){
-                return true;
-            }else if(metrics.densityDpi == DisplayMetrics.DENSITY_TV){
-                return true;
-            }else if(metrics.densityDpi == DisplayMetrics.DENSITY_HIGH){
-                return true;
-            }else if(metrics.densityDpi == DisplayMetrics.DENSITY_280){
-                return true;
-            }else if(metrics.densityDpi == DisplayMetrics.DENSITY_XHIGH) {
-                return true;
-            }else if(metrics.densityDpi == DisplayMetrics.DENSITY_400) {
-                return true;
-            }else if(metrics.densityDpi == DisplayMetrics.DENSITY_XXHIGH) {
-                return true;
-            }else if(metrics.densityDpi == DisplayMetrics.DENSITY_560) {
-                return true;
-            }else if(metrics.densityDpi == DisplayMetrics.DENSITY_XXXHIGH) {
-                return true;
-            }
-        }else{
-            //Mobile
-        }
-        return false;
-    }*/
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
