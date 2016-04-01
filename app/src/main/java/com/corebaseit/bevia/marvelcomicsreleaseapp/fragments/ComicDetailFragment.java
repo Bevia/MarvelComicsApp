@@ -133,7 +133,6 @@ public class ComicDetailFragment extends Fragment {
                         @Override
                         public void onSuccess() {
                         }
-
                         @Override
                         public void onError() {
                         }
@@ -261,7 +260,6 @@ public class ComicDetailFragment extends Fragment {
                     } catch (Exception e) {
 
                     }
-
                     heroImage.setImageBitmap(bitmap);
                 }
             }
@@ -277,7 +275,6 @@ public class ComicDetailFragment extends Fragment {
                 int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
 
                 Matrix matrix = new Matrix();
-
                 if (orientation == 6) {
                     matrix.postRotate(90);
                 } else if (orientation == 3) {
@@ -289,7 +286,6 @@ public class ComicDetailFragment extends Fragment {
                         0, bitmap.getWidth(), bitmap.getHeight(), matrix, true); // rotating bitmap
             } catch (Exception e) {
             }
-
             //image button:
             heroImage.setImageBitmap(bitmap);
         }
@@ -309,7 +305,6 @@ public class ComicDetailFragment extends Fragment {
                 return null;
             mediaImage = new File(myDir.getPath() + "/Bevia/" + (new Date().getTime() / 1000) + ".jpg");
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -393,7 +388,7 @@ public class ComicDetailFragment extends Fragment {
             //o.inSampleSize = 8;
             o.inJustDecodeBounds = true;
             BitmapFactory.decodeStream(new FileInputStream(f), null, o);
-            final int REQUIRED_SIZE = 250; //it's safer for large images VB??
+            final int REQUIRED_SIZE = 250; //it's safer to set to 150 for large images VB??
 
             //Find the correct scale value. It should be the power of 2, it's more efficient!
             int scale = 1;
@@ -432,14 +427,12 @@ public class ComicDetailFragment extends Fragment {
         if (session.authenticationSuccessful()) {
             try {
                 session.finishAuthentication();
-
                 TokenPair tokens = session.getAccessTokenPair();
                 SharedPreferences prefs = getActivity().getSharedPreferences(DROPBOX_NAME, 0);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString(ACCESS_KEY, tokens.key);
                 editor.putString(ACCESS_SECRET, tokens.secret);
                 editor.commit();
-
                 loggedIn(true);
                 uploadFile.setVisibility(View.VISIBLE);
                 login.setVisibility(View.VISIBLE);
@@ -475,12 +468,12 @@ public class ComicDetailFragment extends Fragment {
                 && (heroIdInPreference.equals(heroID))
                 && (isLoggedIn == false))) {
             takePicture.setText(" Login to upload picture to Dropbox...");
-        }else if (!nameOfTakenPictureInPreference.equals("missing")
+        } else if (!nameOfTakenPictureInPreference.equals("missing")
                 && (!heroPicture.equals("missing")
                 && (heroIdInPreference.equals(heroID))
                 && (isLoggedIn == true))) {
             takePicture.setText(" Upload picture to Dropbox!");
-        }else if (!nameOfTakenPictureInPreference.equals("missing")
+        } else if (!nameOfTakenPictureInPreference.equals("missing")
                 && (heroPicture.equals("missing")
                 && (heroIdInPreference.equals(heroID))
                 && (isLoggedIn == true))) {
@@ -508,7 +501,6 @@ public class ComicDetailFragment extends Fragment {
             Context context = getActivity().getApplicationContext();
             CharSequence text = photoName;
             int duration = Toast.LENGTH_SHORT;
-
             Toast toast = Toast.makeText(context, "You are a hero...downloading image", duration);
             toast.show();
         }
@@ -535,18 +527,15 @@ public class ComicDetailFragment extends Fragment {
             } catch (IOException | DropboxException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
         @Override
         protected void onPostExecute(Bitmap dbxBitMap) {
             if (dbxBitMap != null) {
-
                 bitmap = dbxBitMap;
                 heroImage.setImageBitmap(dbxBitMap);
                 takePicture.setText(" You are a hero, your picture is in Dropbox!");
-
             } else {
                 Toast.makeText(context, "Failed to download photo", Toast.LENGTH_LONG).show();
             }

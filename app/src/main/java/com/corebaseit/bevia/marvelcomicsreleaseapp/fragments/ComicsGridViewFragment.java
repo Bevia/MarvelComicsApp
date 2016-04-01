@@ -42,13 +42,6 @@ public class ComicsGridViewFragment extends Fragment {
 
     private void initListComics() {
 
-     /*   if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-        {
-            gm  = new GridLayoutManager(CONTEXT, 2);
-        } else {
-            gm = new GridLayoutManager(CONTEXT, 3);
-        }*/
-
         gm = new GridLayoutManager(CONTEXT, 2);
         comicsListAdapter = new ComicsGridAdapter(CONTEXT);
         recyclerViewComics.setLayoutManager(gm);

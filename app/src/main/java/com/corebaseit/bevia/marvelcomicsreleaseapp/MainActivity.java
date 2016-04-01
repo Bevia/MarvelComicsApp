@@ -66,8 +66,6 @@ public class MainActivity extends AppCompatActivity {
         userInfoSettings = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor userInfoEdit = userInfoSettings.edit();
             userInfoEdit.putString(MY_PARAM_0, "missing");
-            //userInfoEdit.putString(MY_PARAM_1, "missing");
-            // Commit the edits!
             userInfoEdit.commit();
     }
 
@@ -83,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
     }
 
     static public boolean deleteDirectory(File path) {
